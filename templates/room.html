@@ -21,10 +21,12 @@
   const messages = document.getElementById("messages");
 
   const createMessage = (name, msg) => {
+    const isSystemMessage = msg.includes("has entered the room") || msg.includes("has left the room");
+    
     const content = `
-    <div class="text">
+    <div class="text ${isSystemMessage ? 'system-message' : ''}">
         <span>
-            <strong>${name}</strong>: ${msg}
+            ${isSystemMessage ? msg : `<strong>${name}</strong>: ${msg}`}
         </span>
         <span class="muted">
             ${new Date().toLocaleString()}

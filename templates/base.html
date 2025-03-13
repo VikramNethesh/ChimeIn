@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta charset="UTF-8" />
     <title>Chat App</title>
     <link
@@ -14,6 +15,48 @@
     ></script>
   </head>
   <body>
+    <!-- Space background with stars -->
+    <div class="space-background">
+      <div class="stars-layer" id="stars-layer-1"></div>
+      <div class="stars-layer" id="stars-layer-2"></div>
+      <div class="stars-layer" id="stars-layer-3"></div>
+    </div>
+    
     <div class="content">{% block content %} {% endblock %}</div>
+    
+    <!-- Script to generate stars -->
+    <script>
+      // Function to create stars
+      function createStars(layerId, starCount) {
+        const layer = document.getElementById(layerId);
+        
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('div');
+          
+          // Random star size
+          const sizeClasses = ['tiny', 'small', 'medium', 'large'];
+          const sizeClass = sizeClasses[Math.floor(Math.random() * sizeClasses.length)];
+          star.classList.add('star', sizeClass);
+          
+          // Random position
+          const top = Math.random() * 100;
+          const left = Math.random() * 100;
+          star.style.top = `${top}%`;
+          star.style.left = `${left}%`;
+          
+          // Random opacity
+          star.style.opacity = 0.2 + Math.random() * 0.8;
+          
+          layer.appendChild(star);
+        }
+      }
+      
+      // Create stars for each layer with different densities
+      window.addEventListener('DOMContentLoaded', () => {
+        createStars('stars-layer-1', 100); // More stars in first layer
+        createStars('stars-layer-2', 75);
+        createStars('stars-layer-3', 50);  // Fewer stars in third layer
+      });
+    </script>
   </body>
 </html>
