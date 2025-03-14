@@ -2,12 +2,18 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from flask_socketio import join_room, leave_room, send, SocketIO
 import random
 from string import ascii_uppercase
+from cryptography.fernet import Fernet
+key = Fernet.generate_key()
+cipher_suite = Fernet(key)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "hjhjsdahhds"
 socketio = SocketIO(app)
 
 rooms = {}
+
+def encrypt(data):
+    return cipher_suite.encrypt(data.encode("utf-8"))
 
 def generate_unique_code(length):
     while True:
@@ -58,6 +64,8 @@ def room():
 
 @socketio.on("message")
 def message(data):
+    if data["data"][0]=="#":
+        data["data"]= encrypt(data["data"]).decode("utf-8")
     room = session.get("room")
     if room not in rooms:
         return 
@@ -66,6 +74,8 @@ def message(data):
         "name": session.get("name"),
         "message": data["data"]
     }
+    if content["message"][0]=="#":
+        content["message"] == encrypt(content["message"]).decode("utf-8")
     send(content, to=room)
     rooms[room]["messages"].append(content)
     print(f"{session.get('name')} said: {data['data']}")
